@@ -10,7 +10,8 @@ class Test_XML2Pro(unittest.TestCase):
         model_filename = 'test/An Affair to Remember.pro.model'
 
         fout = StringIO.StringIO()
-        xml2pro.xml2pro(input_filename, fout)
+        x1 = xml2pro.XML2Pro(input_filename, fout)
+        x1.process_file()
         
         generated_text = fout.getvalue()
         with codecs.open(model_filename, 'r', 'utf-8') as f:
