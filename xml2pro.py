@@ -130,9 +130,16 @@ class XML2Pro:
 
 
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Extract chords and lyrics from MusicXML file.')
+    parser.add_argument('filenames', metavar='file', nargs='+',
+                    help='a MusicXML file to process')
+
+    args = parser.parse_args()
+
     import sys
     fout = sys.stdout
-    filename = 'test/An Affair to Remember.xml'
-    x1 = XML2Pro(filename, fout)
-    x1.process_file()
+    for filename in args.filenames:
+        x1 = XML2Pro(filename, fout)
+        x1.process_file()
 
