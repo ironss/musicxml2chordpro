@@ -133,5 +133,6 @@ if __name__ == '__main__':
     import sys
     fout = sys.stdout
     filename = 'test/An Affair to Remember.xml'
-    xml2pro_file(filename, fout)
+    x1 = XML2Pro(filename, fout)
+    x1.process_file()
 
