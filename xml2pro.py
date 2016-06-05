@@ -44,6 +44,14 @@ keys = {
 }
 
 
+alters = {
+   -2: 'bb',
+   -1: 'b',
+    0: '',
+    1: '#',
+    2: '##',
+}
+
 class XML2Pro:
     def __init__(self, data, fout):
         self.data = data
@@ -104,9 +112,14 @@ class XML2Pro:
             for child in m:
                 if child.tag == 'harmony':
                     chord_root = child.find('root/root-step').text
+                    try:
+                       chord_alter = child.find('root/root-alter').text
+                       alter = alters[int(chord_alter)]
+                    except AttributeError, KeyError:
+                       alter = ''
                     quality = child.find('kind').text
                     q_code = qualities[quality]
-                    chord = chord_root + q_code
+                    chord = chord_root + alter + q_code
 
                     # If we have to print a chord in the middle of a word,
                     # insert a dash/hyphen before the chord
@@ -121,7 +134,7 @@ class XML2Pro:
                         self.write(syllable)
                         # If this is a single syllable word, or the end of a word, print a space
                         if stype in ['single', 'end']:
-                           self.write(' ')
+                            self.write(' ')
 
             # Every 4 bars, start a new line
             if measure_number % 4 == 0:
@@ -129,7 +142,7 @@ class XML2Pro:
         self.write('\n')
 
     def write(self, data):
-        self.fout.write(data)
+        self.fout.write(data.encode('utf-8'))
 
 
 if __name__ == '__main__':
