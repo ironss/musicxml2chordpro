@@ -60,7 +60,11 @@ def xml2pro(filename, fout):
 
     parts = root.findall('part')
     part = parts[0] # This score has a single part. We should be doing this for each part
+    
+    xml2pro_part(part, fout)
 
+
+def xml2pro_part(part, fout):
     # Assume that the first key signature is the key for the song
     key_index = int(part.find('measure/attributes/key/fifths').text)
     key = keys[key_index]
@@ -68,7 +72,14 @@ def xml2pro(filename, fout):
 
     # End of the header info, about to start with the chords and music.
     fout.write('\n')
+    
+    # Process each line of lyrics.
+    # Need to work out how many lines there are...
+    xml2pro_line(part, '1', fout)
+    xml2pro_line(part, '2', fout)
 
+
+def xml2pro_line(part, line, fout):
     # Process all measure in this part.
     measures = part.findall('measure')  # Assume measures are sorted. We should really sort them by attribute 'number'
 
@@ -78,7 +89,6 @@ def xml2pro(filename, fout):
     #   'note', which has a lyric syllable attached to it
 
     stype = ''  # Type of syllable: single, start, middle or end.
-
     for m in measures:
         measure_number = int(m.get('number'))
         for child in m:
@@ -94,7 +104,7 @@ def xml2pro(filename, fout):
                     fout.write('-')
                 fout.write('[{chord}]'.format(chord=chord))
             elif child.tag == 'note':
-                lyrics = child.findall('lyric[@number="1"]')
+                lyrics = child.findall('lyric[@number="{}"]'.format(line))
                 for l in lyrics:
                     stype = l.find('syllabic').text
                     syllable = l.find('text').text
@@ -106,6 +116,7 @@ def xml2pro(filename, fout):
         # Every 4 bars, start a new line
         if measure_number % 4 == 0:
            fout.write('\n')
+    fout.write('\n')
 
 
 if __name__ == '__main__':
