@@ -18,7 +18,7 @@ class Test_XML2Pro(unittest.TestCase):
             model_text = f.read()
             
         self.assertEqual(generated_text, model_text)
-        
+
 
 if __name__ == '__main__':
     unittest.run()

@@ -11,9 +11,12 @@ import xml.etree.ElementTree as ET
 qualities = {
    'augmented': '+',
    'diminished': 'dim',
+   'diminished-seventh': 'dim7',
    'dominant': '7',
    'dominant-ninth': '9',
+   'half-diminished': 'm7b5',
    'major': '' ,
+   'major-seventh': 'M7',
    'minor': 'm',
    'minor-seventh': 'm7',
    'minor-sixth': 'm6',
@@ -132,14 +135,17 @@ class XML2Pro:
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Extract chords and lyrics from MusicXML file.')
-    parser.add_argument('filenames', metavar='file', nargs='+',
-                    help='a MusicXML file to process')
+    parser.add_argument('filenames', metavar='file', nargs='+', default='-', help='a MusicXML file to process')
 
     args = parser.parse_args()
 
     import sys
     fout = sys.stdout
     for filename in args.filenames:
-        x1 = XML2Pro(filename, fout)
+        if filename == '-':
+            data = sys.stdin
+        else:
+            data = filename
+        x1 = XML2Pro(data, fout)
         x1.process_file()
 
