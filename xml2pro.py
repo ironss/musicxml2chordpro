@@ -62,12 +62,13 @@ class XML2Pro:
         self.root = self.tree.getroot()
 
         self.process_root()
-    
+
     def process_root(self):
         # Get the song name
         title_element = self.root.find('work/work-title')
         self.title = title_element.text
-        self.write('{{title:{title}}}\n'.format(title=self.title))
+        if title_element != None:
+            self.write('{{title:{title}}}\n'.format(title=self.title))
 
         # Get a list of all of the parts
         partlists = self.root.findall('part-list/score-part')
@@ -90,7 +91,7 @@ class XML2Pro:
 
         # End of the header info, about to start with the chords and music.
         self.write('\n')
-        
+
         # Process each line of lyrics.
         # Need to work out how many lines there are...
         self.process_line(part, '1')
